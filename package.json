@@ -17,6 +17,7 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.0.0",
+    "bluebird": "^3.7.2",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-combine-routers": "^4.0.2",
@@ -26,7 +27,10 @@
     "koa-json": "^2.0.2",
     "koa-static": "^5.0.0",
     "moment": "^2.29.1",
+    "mongoose": "^5.11.9",
     "nodemailer": "^6.4.17",
+    "redis": "^3.0.2",
+    "saslprep": "^1.0.3",
     "svg-captcha": "^1.4.0"
   },
   "devDependencies": {
