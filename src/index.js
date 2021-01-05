@@ -32,6 +32,8 @@ if (!isDevMode) {
 
 app.use(middleware)
 
-app.listen(3000, () => {
-  console.log('3000端口')
+let port = isDevMode ? 3000 : 12005
+
+app.listen(port, () => {
+  console.log(`The server is running at: ${port}`)
 })
