@@ -1,9 +1,16 @@
 import svgCaptcha from 'svg-captcha'
+import {
+  setValue,
+  getValue,
+  getHMValue,
+  delValue,
+} from '@/config/RedisConfig'
 
 class PublicController {
   constructor () {}
 
   async getCaptcha (ctx) {
+    const query = ctx.request.query
     const newCaptcha = svgCaptcha.create({
       size: 4, // 验证码长度
       ignoreChars: '0o1il', // 验证码字符中排除 0o1i
@@ -12,7 +19,9 @@ class PublicController {
       width: 150,
       height: 38,
     })
-    // console.log(newCaptcha)
+    // 设置超时时间, 单位: s
+    // 设置图片验证码超时10分钟
+    setValue(query.sid, newCaptcha.text, 10 * 60)
     // 设置redis 键 值 过期时间 五分钟过期
     ctx.body = {
       code: 0,

@@ -9,12 +9,12 @@ const webpackConfig = {
   entry: {
     server: path.join(utils.APP_PATH, 'index.js'),
   },
-  // resolve: {
-  //   ...utils.getWebpackResolveConfig()
-  // },
+  resolve: {
+    ...utils.getWebpackResolveConfig(),
+  },
   output: {
     filename: '[name].bundle.js',
-    path: utils.DIST_PATH
+    path: utils.DIST_PATH,
   },
   module: {
     rules: [
@@ -34,10 +34,14 @@ const webpackConfig = {
     new CleanWebpackPlugin(),
     // webpack.DefinePlugin 配置指南
     // https://webpack.docschina.org/plugins/define-plugin/
+    // 配置环境变量
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: (process.env.NODE_ENV === 'production' ||
-          process.env.NODE_ENV === 'prod') ? '\'production\'' : 'development',
+        NODE_ENV:
+          process.env.NODE_ENV === 'production' ||
+          process.env.NODE_ENV === 'prod' ?
+            `'production'` :
+            `'development'`,
       },
     }),
   ],

@@ -7,9 +7,11 @@
     "webpack:debug": "npx node --inspect-brk ./node_modules/.bin/webpack",
     "build": "cross-env NODE_ENV=prod webpack --config config/webpack.config.prod.js",
     "build:dev": "cross-env NODE_ENV=dev webpack --config config/webpack.config.dev.js",
-    "dev": "cross-env NODE_ENV=dev nodemon --exec babel-node --inspect=9229 src/index.js",
-    "dev修改端口": "cross-env NODE_ENV=dev nodemon --exec babel-node --inspect=9230 src/index.js",
-    "clean": "rimraf dist"
+    "dev-nodemon": "cross-env NODE_ENV=dev nodemon --exec babel-node --inspect=9229 src/index.js",
+    "clean": "rimraf dist",
+    "watch": "cross-env NODE_ENV=dev webpack --watch --progress --config config/webpack.config.dev.js",
+    "serve": "nodemon --inspect ./dist/server.bundle.js",
+    "dev": "npm-run-all -p watch serve"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +43,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.6",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "terser-webpack-plugin": "^5.0.3",
     "webpack": "^5.11.0",
