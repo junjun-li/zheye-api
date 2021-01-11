@@ -8,7 +8,7 @@ mongoose.connect(config.db_url, {
 
 // 连接成功
 mongoose.connection.on('connected', () => {
-  console.log(`Mongoose connected open to ${ config.DB_URL }`)
+  console.log(`Mongoose connected open to ${ config.db_url }`)
 })
 
 // 连接异常

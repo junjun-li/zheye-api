@@ -19,10 +19,10 @@ class PublicController {
       width: 150,
       height: 38,
     })
-    // 设置超时时间, 单位: s
-    // 设置图片验证码超时10分钟
-    setValue(query.sid, newCaptcha.text, 10 * 60)
-    // 设置redis 键 值 过期时间 五分钟过期
+    // // 设置超时时间, 单位: s
+    // // 设置图片验证码超时10分钟
+    setValue(query.sid, newCaptcha.text, 10 * 600)
+    // // 设置redis 键 值 过期时间 五分钟过期
     ctx.body = {
       code: 0,
       data: newCaptcha,

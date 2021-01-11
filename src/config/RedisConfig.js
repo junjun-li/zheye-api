@@ -33,18 +33,24 @@ const options = {
 }
 
 // const client = redis.createClient(options)
-const client = promisifyAll(redis.createClient(options))
+let client = promisifyAll(redis.createClient(options))
 
 client.on('error', (err) => {
   console.log(`redis client Error: ${ err }`)
 })
 
 const setValue = (key, value, time) => {
+  if (!client.connected) {
+    client = promisifyAll(redis.createClient(options))
+  }
   if (typeof value === 'undefined' || value === null || value === '') return
-
   if (typeof value === 'string') {
     if (typeof time !== 'undefined') {
-      client.set(key, value, 'EX', time)
+      client.set(key, value, 'EX', time, (err, result) => {
+        if (result !== 'OK') {
+          console.log('client.set -> err: ', err)
+        }
+      })
     } else {
       client.set(key, value)
     }

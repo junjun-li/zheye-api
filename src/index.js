@@ -7,11 +7,26 @@ import koaBody from 'koa-body'
 import koaJson from 'koa-json'
 import koaCompose from 'koa-compose'
 import koaCompress from 'koa-compress' // 压缩中间件
+import jwt from 'koa-jwt'
+import errorHandle from '@/common/errorHandle'
 import router from './routes/routes'
+import config from '@/config'
 
 const app = new koa()
 
-const isDevMode = process.env.NODE_ENV === 'production' ? false : true
+const isDevMode = process.env.NODE_ENV !== 'production'
+
+// jwt的使用方式2 这个包只拥有jwt鉴权的功能,但是生成token还需要另外一个库 jsonwebtoken
+const unlessPath = [
+  /^\/public/,
+  '/getCaptcha',
+  '/reg',
+  '/getPostList',
+  '/login'
+]
+
+const JWT =
+  jwt({ secret: config.jwtSecret }).unless({ path: unlessPath })
 
 const middleware = koaCompose([
   koaBody(),
@@ -23,6 +38,8 @@ const middleware = koaCompose([
   }),
   helmet(),
   router(),
+  errorHandle,
+  JWT,
 ])
 
 // 不是开发环境, 压缩中间件
@@ -35,5 +52,5 @@ app.use(middleware)
 let port = isDevMode ? 3000 : 12005
 
 app.listen(port, () => {
-  console.log(`The server is running at: ${port}`)
+  console.log(`The server is running at: ${ port }`)
 })

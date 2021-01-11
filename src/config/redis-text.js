@@ -5,7 +5,7 @@ import {
   delValue
 } from './RedisConfig'
 
-setValue('setValue', 'setValue')
+setValue('setValue', 'setValue', 600)
 
 getValue('setValue').then(res => {
   console.log(res)

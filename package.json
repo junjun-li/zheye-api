@@ -10,7 +10,7 @@
     "dev-nodemon": "cross-env NODE_ENV=dev nodemon --exec babel-node --inspect=9229 src/index.js",
     "clean": "rimraf dist",
     "watch": "cross-env NODE_ENV=dev webpack --watch --progress --config config/webpack.config.dev.js",
-    "serve": "nodemon --inspect ./dist/server.bundle.js",
+    "serve": "nodemon --inspect=127.0.0.1:18000 ./dist/server.bundle.js",
     "dev": "npm-run-all -p watch serve"
   },
   "keywords": [],
@@ -19,7 +19,9 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.0.0",
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.7.2",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-combine-routers": "^4.0.2",
@@ -27,6 +29,7 @@
     "koa-compress": "^5.0.1",
     "koa-helmet": "^6.0.0",
     "koa-json": "^2.0.2",
+    "koa-jwt": "^4.0.0",
     "koa-static": "^5.0.0",
     "moment": "^2.29.1",
     "mongoose": "^5.11.9",
