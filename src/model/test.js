@@ -4,14 +4,14 @@ const Schema = mongoose.Schema
 
 const TestSchema = new Schema({
   name: {
-    type: String,
+    type: String
   },
   age: {
-    type: Number,
+    type: Number
   },
   email: {
-    type: String,
-  },
+    type: String
+  }
 })
 
 const TestModel = mongoose.model('users', TestSchema)

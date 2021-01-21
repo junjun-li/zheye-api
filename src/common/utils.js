@@ -6,11 +6,7 @@ export const checkCode = async (key, value) => {
   // 否则返回取到的数据
   const redisData = await getValue(key)
   if (redisData !== null) {
-    if (value.toLowerCase() === redisData.toLowerCase()) {
-      return true
-    } else {
-      return false
-    }
+    return value.toLowerCase() === redisData.toLowerCase()
   } else {
     return false
   }

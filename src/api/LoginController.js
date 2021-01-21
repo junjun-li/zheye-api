@@ -1,4 +1,4 @@
-import send from '../config/MailConfig'
+import send from '@/config/MailConfig'
 import moment from 'moment'
 import { checkCode } from '@/common/utils'
 import jsonwebtoken from 'jsonwebtoken'
@@ -7,21 +7,19 @@ import UserModel from '@/model/UserModel'
 import bcrypt from 'bcrypt'
 
 class LoginController {
-  constructor () {}
-
   async forget (ctx) {
     const { body } = ctx.request
     let result = await send({
       code: '1234',
       expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
       email: body.username,
-      user: 'Brian',
+      user: 'Brian'
     })
 
     ctx.body = {
       code: 0,
       data: result,
-      msg: '发送成功',
+      msg: '发送成功'
     }
   }
 
@@ -31,8 +29,8 @@ class LoginController {
         username,
         password,
         code,
-        sid,
-      },
+        sid
+      }
     } = ctx.request
     const result = await checkCode(sid, code)
     // 1. 接收用户数据
@@ -55,7 +53,7 @@ class LoginController {
         // 用户名密码正确, 生成token
         const token = jsonwebtoken.sign(
           { _id: 'junjun' },
-          config.jwtSecret,
+          config.jwtSecret
         )
         console.log(token)
         ctx.body = {
@@ -63,20 +61,20 @@ class LoginController {
           data: {
             username: 'junjun',
             password: '123456',
-            token,
+            token
           },
-          msg: '登录成功',
+          msg: '登录成功'
         }
       } else {
         ctx.body = {
           code: 1,
-          msg: '用户名或密码错误',
+          msg: '用户名或密码错误'
         }
       }
     } else {
       ctx.body = {
         code: 1,
-        msg: '验证码错误或已失效, 请刷新验证码',
+        msg: '验证码错误或已失效, 请刷新验证码'
       }
     }
   }
@@ -103,7 +101,7 @@ class LoginController {
         // check = false
         ctx.body = {
           code: 1,
-          msg: '该邮箱已存在,您可以直接登录或重新设置密码',
+          msg: '该邮箱已存在,您可以直接登录或重新设置密码'
         }
         return
       }
@@ -112,7 +110,7 @@ class LoginController {
         // check = false
         ctx.body = {
           code: 1,
-          msg: '该昵称已存在,试试别的昵称吧',
+          msg: '该昵称已存在,试试别的昵称吧'
         }
         return
       }
@@ -122,19 +120,19 @@ class LoginController {
         username: body.username,
         password: pwd,
         name: body.name,
-        created: moment().format('YYYY-MM-DD HH:mm:ss'),
+        created: moment().format('YYYY-MM-DD HH:mm:ss')
       })
       const result = await newUser.save()
 
       ctx.body = {
         code: 0,
         data: result,
-        msg: '注册成功',
+        msg: '注册成功'
       }
     } else {
       ctx.body = {
         code: 1,
-        msg: '验证码错误或已失效, 请刷新验证码',
+        msg: '验证码错误或已失效, 请刷新验证码'
       }
     }
   }

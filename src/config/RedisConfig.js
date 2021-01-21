@@ -29,14 +29,14 @@ const options = {
     }
     // reconnect after
     return Math.min(options.attempt * 100, 3000)
-  },
+  }
 }
 
 // const client = redis.createClient(options)
 let client = promisifyAll(redis.createClient(options))
 
 client.on('error', (err) => {
-  console.log(`redis client Error: ${ err }`)
+  console.log(`redis client Error: ${err}`)
 })
 
 const setValue = (key, value, time) => {
@@ -86,7 +86,7 @@ const delValue = (key) => {
     if (res === 1) {
       console.log('delete successfully')
     } else {
-      console.log(`delete redis key error: ${ err }`)
+      console.log(`delete redis key error: ${err}`)
     }
   })
 }
@@ -96,5 +96,5 @@ export {
   setValue,
   getValue,
   getHMValue,
-  delValue,
+  delValue
 }

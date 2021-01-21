@@ -1,27 +1,27 @@
-"use strict";
-exports.__esModule = true;
-var koa = require("koa");
-var Router = require("koa-router");
-var app = new koa();
-var router = new Router();
+'use strict'
+exports.__esModule = true
+let Koa = require('koa')
+let Router = require('koa-router')
+let app = new Koa()
+let router = new Router()
 router.get('/', function (ctx, next) {
-    ctx.body = {
-        msg: 'hello koa js'
-    };
-});
+  ctx.body = {
+    msg: 'hello koa js'
+  }
+})
 router.get('/cat', function (ctx, next) {
-    ctx.body = {
-        msg: 'hello cat'
-    };
-});
+  ctx.body = {
+    msg: 'hello cat'
+  }
+})
 router.get('/dog', function (ctx, next) {
-    ctx.body = {
-        msg: 'hello dog'
-    };
-});
+  ctx.body = {
+    msg: 'hello dog'
+  }
+})
 app
-    .use(router.routes())
-    .use(router.allowedMethods());
+  .use(router.routes())
+  .use(router.allowedMethods())
 app.listen(3000, function () {
-    console.log('3000端口');
-});
+  console.log('3000端口')
+})

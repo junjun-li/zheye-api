@@ -14,7 +14,7 @@ getValue('setValue').then(res => {
 setValue('setObject', {
   name: 'luowei',
   age: 23,
-  email: '981311431@qq.com',
+  email: '981311431@qq.com'
 })
 
 getHMValue('setObject').then(res => {

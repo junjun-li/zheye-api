@@ -3,12 +3,10 @@ import {
   setValue,
   getValue,
   getHMValue,
-  delValue,
+  delValue
 } from '@/config/RedisConfig'
 
 class PublicController {
-  constructor () {}
-
   async getCaptcha (ctx) {
     const query = ctx.request.query
     const newCaptcha = svgCaptcha.create({
@@ -17,7 +15,7 @@ class PublicController {
       color: true, // 验证码的字符是否有颜色，默认没有，如果设定了背景，则默认有
       noise: Math.floor(Math.random() * 5), // 干扰线条的数量
       width: 150,
-      height: 38,
+      height: 38
     })
     // // 设置超时时间, 单位: s
     // // 设置图片验证码超时10分钟
@@ -26,7 +24,7 @@ class PublicController {
     ctx.body = {
       code: 0,
       data: newCaptcha,
-      msg: '验证码发送成功',
+      msg: '验证码发送成功'
     }
   }
 }

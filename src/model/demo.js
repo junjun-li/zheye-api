@@ -4,7 +4,7 @@ import User from './test'
 const user = {
   name: 'junjun',
   age: 18,
-  email: '11776174@qq.com',
+  email: '11776174@qq.com'
 }
 
 const run = async () => {
@@ -30,7 +30,7 @@ const run1 = async () => {
 // 改
 const run2 = async () => {
   const result = await User.updateOne({ name: 'lijunjun' }, {
-    email: '11776174@qq.com',
+    email: '11776174@qq.com'
   })
   console.log(result)
 }

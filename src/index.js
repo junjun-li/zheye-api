@@ -1,4 +1,4 @@
-import koa from 'koa'
+import Koa from 'koa'
 import cors from '@koa/cors' // 解决跨域
 import helmet from 'koa-helmet' // 请求头
 import statics from 'koa-static'
@@ -12,11 +12,12 @@ import errorHandle from '@/common/errorHandle'
 import router from './routes/routes'
 import config from '@/config'
 
-const app = new koa()
+const app = new Koa()
 
 const isDevMode = process.env.NODE_ENV !== 'production'
 
 // jwt的使用方式2 这个包只拥有jwt鉴权的功能,但是生成token还需要另外一个库 jsonwebtoken
+// todo 路由权限设置一下
 const unlessPath = [
   /^\/public/,
   '/getCaptcha',
@@ -34,12 +35,12 @@ const middleware = koaCompose([
   cors(),
   koaJson({
     pretty: false,
-    param: 'pretty',
+    param: 'pretty'
   }),
   helmet(),
   router(),
   errorHandle,
-  JWT,
+  JWT
 ])
 
 // 不是开发环境, 压缩中间件
@@ -52,5 +53,5 @@ app.use(middleware)
 let port = isDevMode ? 3000 : 12005
 
 app.listen(port, () => {
-  console.log(`The server is running at: ${ port }`)
+  console.log(`The server is running at: ${port}`)
 })

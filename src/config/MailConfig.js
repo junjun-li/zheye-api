@@ -13,9 +13,9 @@ async function send (sendInfo) {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: `981311431@qq.com`, // generated ethereal user
-      pass: `dcnnbewveqvfbbec`, // generated ethereal password
-    },
+      user: '981311431@qq.com', // generated ethereal user
+      pass: 'dcnnbewveqvfbbec' // generated ethereal password
+    }
   })
   // let sendInfo = {
   //   code: '1234',
@@ -28,7 +28,7 @@ async function send (sendInfo) {
   let info = await transporter.sendMail({
     from: '"您正在更换邮箱 👻" <981311431@qq.com>', // 来自谁的
     to: sendInfo.email, // 接受者的邮箱
-    subject: `Imooc社区更换邮箱`, // 邮件主体
+    subject: 'Imooc社区更换邮箱', // 邮件主体
     html: `
         <div style="border: 1px solid #dcdcdc;color: #676767;width: 600px; margin: 0 auto; padding-bottom: 50px;position: relative;">
           <div style="height: 60px; background: #393d49; line-height: 60px; color: #58a36f; font-size: 18px;padding-left: 10px;">Imooc社区——欢迎来到官方社区-您正在重置邮箱</div>
@@ -42,7 +42,7 @@ async function send (sendInfo) {
       `
   })
 
-  return  'Message sent: %s', info.messageId
+  return 'Message sent: %s' + info.messageId
 }
 
 export default send

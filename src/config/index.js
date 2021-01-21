@@ -1,9 +1,9 @@
-const db_url = 'mongodb://test:123456@121.37.183.14:27017/testdb'
+const dbUrl = 'mongodb://test:123456@121.37.183.14:27017/testdb'
 
 const redis = {
   host: '121.37.183.14',
   port: '15001',
-  password: 'l11776174',
+  password: 'l11776174'
 }
 
 // const redis = {
@@ -12,10 +12,10 @@ const redis = {
 //   // password: 'l11776174',
 // }
 
-const jwtSecret = `A,+fFU4XoDo7&yBjCC.a2utGfajQB6+CZ-3;.e;_#E3p23PUM#`
+const jwtSecret = 'A,+fFU4XoDo7&yBjCC.a2utGfajQB6+CZ-3;.e;_#E3p23PUM#'
 
 export default {
-  db_url,
+  dbUrl,
   redis,
-  jwtSecret,
+  jwtSecret
 }
