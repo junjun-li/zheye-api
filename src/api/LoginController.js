@@ -11,7 +11,9 @@ class LoginController {
     const { body } = ctx.request
     let result = await send({
       code: '1234',
-      expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
+      expire: moment()
+        .add(30, 'minutes')
+        .format('YYYY-MM-DD HH:mm:ss'),
       email: body.username,
       user: 'Brian'
     })
@@ -44,23 +46,50 @@ class LoginController {
     //   "sid": "35280fe3-a5f3-417a-a1d9-66abcb6afa4b"
     // }
     if (result) {
+      // 查库, 判断用户名密码是否正确
+      const user = await UserModel.findOne({
+        username
+      })
+
       let checkUserPassword = true
       // 比对加密之后密码是否正确
-      // if (await bcrypt.compare(body.password, user.password)) {
-      //   checkUserPassword = true
-      // }
+      if (await bcrypt.compare(password, user.password)) {
+        checkUserPassword = true
+      }
       if (checkUserPassword) {
+        // 这样也可以设置过期时间
+        // const token = jsonwebtoken.sign(
+        //   { _id: 'brian' },
+        //   config.JWT_SECRET,
+        //   {
+        //     expiresIn: '1d'
+        //   }
+        // )
         // 用户名密码正确, 生成token
         const token = jsonwebtoken.sign(
-          { _id: 'junjun' },
-          config.jwtSecret
+          {
+            _id: user._id
+            // exp: Math.floor(Date.now() / 1000) + 60 * 60 // 方式1设置过期时间 1小时过期
+          },
+          config.jwtSecret,
+          {
+            // 一天过期
+            expiresIn: '1d'
+          }
         )
-        console.log(token)
+        // 把用户信息查出来, 返回前台
+        const userInfo = user.toJSON()
+        // 删除掉一些铭感的数据
+        let arr = ['password', 'username', 'roles']
+
+        arr.forEach(item => {
+          delete userInfo[item]
+        })
+
         ctx.body = {
           code: 0,
           data: {
-            username: 'junjun',
-            password: '123456',
+            ...userInfo,
             token
           },
           msg: '登录成功'
@@ -120,7 +149,8 @@ class LoginController {
         username: body.username,
         password: pwd,
         name: body.name,
-        created: moment().format('YYYY-MM-DD HH:mm:ss')
+        created: moment()
+          .format('YYYY-MM-DD HH:mm:ss')
       })
       const result = await newUser.save()
 

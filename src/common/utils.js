@@ -1,4 +1,6 @@
 import { getValue } from '@/config/RedisConfig'
+import jwt from 'jsonwebtoken'
+import config from '@/config'
 
 export const checkCode = async (key, value) => {
   // 如果key过期了或者取不到
@@ -10,4 +12,8 @@ export const checkCode = async (key, value) => {
   } else {
     return false
   }
+}
+
+export const getJWTPayload = (token) => {
+  return jwt.verify(token.split(' ')[1], config.jwtSecret)
 }

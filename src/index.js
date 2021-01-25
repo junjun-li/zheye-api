@@ -26,9 +26,7 @@ const unlessPath = [
   '/login'
 ]
 
-const JWT =
-  jwt({ secret: config.jwtSecret }).unless({ path: unlessPath })
-
+const JWT = jwt({ secret: config.jwtSecret }).unless({ path: unlessPath })
 const middleware = koaCompose([
   koaBody(),
   statics(path.join(__dirname, '../public')),
@@ -38,9 +36,10 @@ const middleware = koaCompose([
     param: 'pretty'
   }),
   helmet(),
-  router(),
   errorHandle,
-  JWT
+  // jwt的坑, 先试用jwt, 在注册路由
+  JWT,
+  router()
 ])
 
 // 不是开发环境, 压缩中间件
@@ -50,7 +49,9 @@ if (!isDevMode) {
 
 app.use(middleware)
 
-let port = isDevMode ? 3000 : 12005
+// app.use(router())
+
+let port = isDevMode ? 12005 : 12005
 
 app.listen(port, () => {
   console.log(`The server is running at: ${port}`)

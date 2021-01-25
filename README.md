@@ -41,7 +41,7 @@ build:dev: 开发环境打包
 
 使用nodemon来启动我们的服务
 
-## 使用了@路径,  修改一下配置
+## 使用了@路径, 修改一下配置
 
 "watch": "cross-env NODE_ENV=dev webpack --watch --progress --config config/webpack.config.dev.js",
 

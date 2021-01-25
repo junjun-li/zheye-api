@@ -15,6 +15,8 @@ module.exports = {
     'require-atomic-updates': 'off',
     'prefer-const': 'off',
     'no-unused-vars': 'off',
-    'quote-props': 'off'
+    'quote-props': 'off',
+    // else在新的一行
+    'brace-style': 'off'
   }
 }

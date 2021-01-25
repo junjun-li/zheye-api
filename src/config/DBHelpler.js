@@ -1,14 +1,16 @@
 import mongoose from 'mongoose'
 import config from './index'
 
-mongoose.connect(config.dbUrl, {
+mongoose.set('useCreateIndex', true)
+
+mongoose.connect('mongodb://test:123456@121.37.183.14:27017/testdb', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 
 // 连接成功
 mongoose.connection.on('connected', () => {
-  console.log(`Mongoose connected open to ${config.db_url}`)
+  console.log(`Mongoose connected open to ${config.dbUrl}`)
 })
 
 // 连接异常

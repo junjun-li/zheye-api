@@ -3,6 +3,6 @@ import ContentController from '@/api/ContentController'
 
 const router = new Router()
 
-router.post('/getPostList', ContentController.getPostList)
+router.get('/getPostList', ContentController.getPostList)
 
 export default router
