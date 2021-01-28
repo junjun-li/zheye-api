@@ -28,7 +28,16 @@ const unlessPath = [
 
 const JWT = jwt({ secret: config.jwtSecret }).unless({ path: unlessPath })
 const middleware = koaCompose([
-  koaBody(),
+  koaBody({
+    multipart: true, // 让koa-body可以收到formDate的数据
+    formidable: {
+      keepExtensions: true,
+      maxFieldsSize: 5 * 1024 * 1024
+    },
+    onError: err => {
+      console.log('koaBody TCL: err', err)
+    }
+  }),
   statics(path.join(__dirname, '../public')),
   cors(),
   koaJson({

@@ -1,4 +1,4 @@
-const { merge } = require('webpack-merge');
+const { merge } = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.config.base')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
 
@@ -6,7 +6,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   stats: {
     children: false,
-    warnings: false,
+    warnings: false
   },
   optimization: {
     // minimize: true,
@@ -20,19 +20,19 @@ const webpackConfig = merge(baseWebpackConfig, {
             // 是否注释console.log
             drop_console: false,
             dead_code: true,
-            drop_debugger: true,
+            drop_debugger: true
           },
           output: {
             comments: false,
-            beautify: false,
+            beautify: false
           },
-          mangle: true,
+          mangle: true
         },
         // https://webpack.docschina.org/plugins/terser-webpack-plugin/#parallel
-        parallel: true,
+        parallel: true
         // sourceMap: false // 老师的这个属性会报错
-      }),
-    ],
+      })
+    ]
     // https://webpack.docschina.org/plugins/split-chunks-plugin/#split-chunks-example-1
     // splitChunks: {
     //   cacheGroups: {
@@ -45,7 +45,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     //     }
     //   }
     // }
-  },
+  }
 })
 
 module.exports = webpackConfig

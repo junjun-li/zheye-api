@@ -13,7 +13,6 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'require-atomic-updates': 'off',
-    'prefer-const': 'off',
     'no-unused-vars': 'off',
     'quote-props': 'off',
     // else在新的一行

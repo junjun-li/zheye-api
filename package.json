@@ -31,6 +31,7 @@
     "koa-json": "^2.0.2",
     "koa-jwt": "^4.0.0",
     "koa-static": "^5.0.0",
+    "make-dir": "^3.1.0",
     "moment": "^2.29.1",
     "mongoose": "^5.11.13",
     "nodemailer": "^6.4.17",

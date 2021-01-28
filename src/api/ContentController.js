@@ -1,6 +1,11 @@
 import PostModel from '@/model/PostModel'
 import LinkModel from '@/model/LinkModel'
+import moment from 'moment'
+import { v4 as uuid } from 'uuid'
+import fs from 'fs'
+import makeDir from 'make-dir'
 
+import config from '@/config'
 class ContentController {
   async getPostList (ctx) {
     const body = ctx.query
@@ -96,6 +101,60 @@ class ContentController {
       code: 0,
       data: res,
       msg: '操作成功'
+    }
+  }
+
+  // 上传图片
+  async uploadImg (ctx) {
+    // ctx.request.files 取得文件
+    // append file 文件内容
+    const file = ctx.request.files.file
+    // 截取后缀名
+    const ext = file.name.split('.').pop()
+
+    const dir = `${config.uploadPath}/${moment().format('YYYY-MM-DD')}`
+    // 判断路径是否存在, 不存在则创建
+    await makeDir(dir)
+    // 存储文件到指定路径
+    // 给文件一个唯一的名称
+    const picName = uuid()
+    const destPath = `${dir}/${picName}.${ext}`
+    const reader = fs.createReadStream(file.path)
+    // const reader = fs.createReadStream(file.path, {
+    //   // 每次读取1024字节
+    //   highWaterMark: 1 * 1024
+    // })
+    const upStream = fs.createWriteStream(destPath)
+    const filePath = `/${moment().format('YYYY-MM-DD')}/${picName}.${ext}`
+
+    // method 1
+    reader.pipe(upStream)
+
+    // method 2 可以监听上传事件
+
+    // 获取文件总长度
+    // const stat = fs.statSync(file.path)
+
+    // let totalLength = 0
+    // reader.on('data', (chunk) => {
+    //   totalLength += chunk.length
+    //   if (upStream.write(chunk) === false) {
+    //     // 停止读取流
+    //     reader.pause()
+    //   }
+    // })
+
+    // upStream.on('drain', () => {
+    //   reader.resume()
+    // })
+
+    // reader.on('end', () => {
+    //   upStream.end()
+    // })
+    ctx.body = {
+      code: 0,
+      msg: '上传成功',
+      data: filePath
     }
   }
 }

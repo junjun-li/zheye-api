@@ -4,7 +4,10 @@ import { getJWTPayload } from '@/common/utils'
 import moment from 'moment'
 import { v4 as uuid } from 'uuid'
 import send from '@/config/MailConfig'
-import { getValue, setValue } from '@/config/RedisConfig'
+import {
+  getValue,
+  setValue
+} from '@/config/RedisConfig'
 import jwt from 'jsonwebtoken'
 import config from '@/config'
 
@@ -145,23 +148,32 @@ class UserController {
 
   // 更新用户基本信息
   async updateUserInfo (ctx) {
-    let { body } = ctx.request
-    let token = ctx.header.authorization
-    let obj = await getJWTPayload(token)
-    let result = await UserModel.updateOne({ _id: obj._id }, {
+    const { body } = ctx.request
+    const token = ctx.header.authorization
+    const obj = await getJWTPayload(token)
+    // 真坑, null 和undefined 数据, 也会存进去
+    const updateObj = {
       name: body.name,
       location: body.location,
       gender: body.gender,
       mobile: body.mobile,
       pic: body.pic,
       signature: body.signature
+    }
+    Object.keys(updateObj).forEach((item) => {
+      if (updateObj[item] === null || typeof updateObj[item] === 'undefined') {
+        delete updateObj[item]
+      }
     })
+    console.log(updateObj)
+    const result = await UserModel.updateOne({ _id: obj._id }, updateObj)
     if (result.n === 1 && result.ok === 1) {
       ctx.body = {
         code: 0,
         msg: '修改成功'
       }
-    } else {
+    }
+    else {
       ctx.body = {
         code: 1,
         msg: '修改失败'
@@ -172,21 +184,21 @@ class UserController {
   // 发送更改邮箱连接
   async sendUpdateEmail (ctx) {
     // 获取get请求的参数
-    let body = ctx.request.query
-    let token = ctx.header.authorization
-    let objToken = await getJWTPayload(token)
+    const body = ctx.request.query
+    const token = ctx.header.authorization
+    const objToken = await getJWTPayload(token)
     // 1. 查库,判断该邮箱是否存在
-    let result = await UserModel.findOne({ username: body.updateUserName })
+    const result = await UserModel.findOne({ username: body.updateUserName })
     if (result === null) {
-      let userInfo = await UserModel.findOne({ _id: objToken._id })
+      const userInfo = await UserModel.findOne({ _id: objToken._id })
       // // 发送邮件 修改邮箱
-      let key = uuid()
+      const key = uuid()
       // 在redis里面存储key 用户id
       setValue(key, jwt.sign({ _id: objToken._id }, config.jwtSecret, {
         expiresIn: '30m'
       }))
       // 发送邮件
-      let res = await send({
+      const res = await send({
         type: 'email',
         data: {
           key: key,
@@ -203,7 +215,8 @@ class UserController {
         msg: '邮件已发送',
         data: res
       }
-    } else {
+    }
+    else {
       ctx.body = {
         code: 1,
         msg: '该邮箱已存在'
@@ -213,11 +226,11 @@ class UserController {
 
   // 确认修改邮箱
   async updateUsername (ctx) {
-    let body = ctx.query
+    const body = ctx.query
     if (body.key) {
       // 去除redis中的token
-      let token = await getValue(body.key)
-      let obj = getJWTPayload('Bearer ' + token)
+      const token = await getValue(body.key)
+      const obj = getJWTPayload('Bearer ' + token)
       await UserModel.updateOne({ _id: obj._id }, {
         username: body.username
       })
@@ -225,7 +238,8 @@ class UserController {
         code: 0,
         msg: '修改成功'
       }
-    } else {
+    }
+    else {
       ctx.body = {
         code: 1,
         msg: '参数错误'
