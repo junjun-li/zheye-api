@@ -4,6 +4,7 @@ import { checkCode } from '@/common/utils'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '@/config'
 import UserModel from '@/model/UserModel'
+import SignRecordModel from '@/model/SignRecordModel'
 import bcrypt from 'bcrypt'
 
 class LoginController {
@@ -80,12 +81,27 @@ class LoginController {
         // 把用户信息查出来, 返回前台
         const userInfo = user.toJSON()
         // 删除掉一些铭感的数据
-        let arr = ['password', 'username', 'roles']
+        // let arr = ['password', 'username', 'roles']
+        let arr = ['password', 'roles']
 
         arr.forEach(item => {
           delete userInfo[item]
         })
 
+        // 加入一个今日是否签到的属性
+        let signRecord = await SignRecordModel.findByUid(user._id)
+        if (signRecord !== null) {
+          // debugger
+          // 说明以前签到过了, 再看看签到
+          if (moment(signRecord.createdTime).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+            userInfo.isSign = true
+          } else {
+            userInfo.isSign = false
+          }
+          userInfo.lastSign = signRecord.created
+        } else {
+          userInfo.isSign = false
+        }
         ctx.body = {
           code: 0,
           data: {
@@ -94,13 +110,15 @@ class LoginController {
           },
           msg: '登录成功'
         }
-      } else {
+      }
+      else {
         ctx.body = {
           code: 1,
           msg: '用户名或密码错误'
         }
       }
-    } else {
+    }
+    else {
       ctx.body = {
         code: 1,
         msg: '验证码错误或已失效, 请刷新验证码'
@@ -159,7 +177,8 @@ class LoginController {
         data: result,
         msg: '注册成功'
       }
-    } else {
+    }
+    else {
       ctx.body = {
         code: 1,
         msg: '验证码错误或已失效, 请刷新验证码'
