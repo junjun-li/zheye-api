@@ -13,4 +13,6 @@ router.get('/sendUpdateEmail', UserController.sendUpdateEmail)
 
 router.get('/updateUsername', UserController.updateUsername)
 
+router.post('/resetPassword', UserController.resetPassword)
+
 export default router

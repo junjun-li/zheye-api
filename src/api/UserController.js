@@ -10,6 +10,7 @@ import {
 } from '@/config/RedisConfig'
 import jwt from 'jsonwebtoken'
 import config from '@/config'
+import bcrypt from 'bcrypt'
 
 class UserController {
   // 用户签到
@@ -243,6 +244,35 @@ class UserController {
       ctx.body = {
         code: 1,
         msg: '参数错误'
+      }
+    }
+  }
+
+  // 修改密码
+  async resetPassword (ctx) {
+    const { body } = ctx.request
+    // 1. 查库, 看看以前的密码和传入的是否一致
+    // 2. 如果一致, 返回修改成功
+    // 2.1 如果不一致, 返回密码错误, 请重新输入
+    const token = ctx.header.authorization
+    // 根据token 获取用户
+    const obj = await getJWTPayload(token)
+    // 获取用户呃旧密码
+    const user = await UserModel.findOne({ _id: obj._id })
+    if (await bcrypt.compare(body.oldPass, user.password)) {
+      const newpasswd = await bcrypt.hash(body.newPass, 5)
+      const result = await UserModel.updateOne(
+        { _id: obj._id },
+        { $set: { password: newpasswd } }
+      )
+      ctx.body = {
+        code: 0,
+        msg: '更新密码成功'
+      }
+    } else {
+      ctx.body = {
+        code: 1,
+        msg: '密码输入错误, 请重试'
       }
     }
   }
