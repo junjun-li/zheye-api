@@ -23,7 +23,10 @@ const unlessPath = [
   '/getCaptcha',
   '/reg',
   '/getPostList',
-  '/login'
+  '/login',
+  '/getTips',
+  '/getTopWeek',
+  '/getLinks'
 ]
 
 const JWT = jwt({ secret: config.jwtSecret }).unless({ path: unlessPath })
@@ -60,7 +63,7 @@ app.use(middleware)
 
 // app.use(router())
 
-let port = isDevMode ? 12005 : 12005
+const port = isDevMode ? 12005 : 12005
 
 app.listen(port, () => {
   console.log(`The server is running at: ${port}`)
