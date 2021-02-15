@@ -16,13 +16,41 @@ const PostSchema = new Schema({
   createdTime: { type: String },
   catalog: { type: String },
   fav: { type: String },
-  isEnd: { type: String },
-  reads: { type: Number },
-  answer: { type: Number },
-  status: { type: String },
-  isTop: { type: String },
+  // 是否结贴 0-未结束，1-已结贴
+  isEnd: {
+    type: String,
+    default: '0'
+  },
+  // 阅读记数
+  reads: {
+    type: Number,
+    default: 0
+  },
+  // 回答记数
+  answer: {
+    type: Number,
+    default: 0
+  },
+  // 0-打开回复，1-关闭回复
+  status: {
+    type: String,
+    default: '0'
+  },
+  // 是否置顶
+  isTop: {
+    type: String,
+    default: '0'
+  },
   sort: { type: String },
-  tags: { type: Array }
+  tags: {
+    type: Array,
+    default: [
+      // {
+      //   name: '',
+      //   class: ''
+      // }
+    ]
+  }
 })
 
 PostSchema.pre('save', function (next) {

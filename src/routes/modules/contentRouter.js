@@ -7,4 +7,6 @@ router.get('/getPostList', ContentController.getPostList)
 
 router.post('/uploadImg', ContentController.uploadImg)
 
+router.post('/add', ContentController.addPost)
+
 export default router

@@ -4,8 +4,13 @@ import moment from 'moment'
 import { v4 as uuid } from 'uuid'
 import fs from 'fs'
 import makeDir from 'make-dir'
-
 import config from '@/config'
+import {
+  checkCode,
+  getJWTPayload
+} from '@/common/utils'
+import UserModel from '@/model/UserModel'
+
 class ContentController {
   async getPostList (ctx) {
     const body = ctx.query
@@ -68,7 +73,7 @@ class ContentController {
     //   sort: '0'
     // })
     // const tmp = await linkTest.save()
-    let result = await LinkModel.find({ type: 'link' })
+    const result = await LinkModel.find({ type: 'link' })
     ctx.body = {
       code: 0,
       data: result,
@@ -86,7 +91,7 @@ class ContentController {
     //   sort: '0'
     // })
     // const tmp = await linkTest.save()
-    let result = await LinkModel.find({ type: 'tip' })
+    const result = await LinkModel.find({ type: 'tip' })
     ctx.body = {
       code: 0,
       data: result,
@@ -155,6 +160,47 @@ class ContentController {
       code: 0,
       msg: '上传成功',
       data: filePath
+    }
+  }
+
+  // 发帖
+  async addPost (ctx) {
+    const { body } = ctx.request
+    const { sid, code, fav } = body
+    // 验证图片验证码的时效性、正确性
+    const result = await checkCode(sid, code)
+    if (result) {
+      const obj = await getJWTPayload(ctx.header.authorization)
+      // 判断用户的积分数是否 > fav，否则，提示用户积分不足发贴
+      // 用户积分足够的时候，新建Post，减除用户对应的积分
+      const user = await UserModel.findByID({ _id: obj._id })
+      if (user.favs < fav) {
+        ctx.body = {
+          code: 1,
+          msg: '积分不足'
+        }
+      }
+      else {
+        await UserModel.updateOne(
+          { _id: obj._id },
+          // 扣除积分
+          { $inc: { favs: -body.fav } }
+        )
+      }
+      const newPost = await new PostModel(body)
+      newPost.uid = obj._id
+      const result = await newPost.save()
+      ctx.body = {
+        code: 0,
+        msg: '成功的保存的文章',
+        data: result
+      }
+    }
+    else {
+      ctx.body = {
+        code: 1,
+        msg: '图片验证码验证失败'
+      }
     }
   }
 }
