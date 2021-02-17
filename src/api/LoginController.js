@@ -10,7 +10,7 @@ import bcrypt from 'bcrypt'
 class LoginController {
   async forget (ctx) {
     const { body } = ctx.request
-    let result = await send({
+    const result = await send({
       code: '1234',
       expire: moment()
         .add(30, 'minutes')
@@ -82,14 +82,14 @@ class LoginController {
         const userInfo = user.toJSON()
         // 删除掉一些铭感的数据
         // let arr = ['password', 'username', 'roles']
-        let arr = ['password', 'roles']
+        const arr = ['password', 'roles']
 
         arr.forEach(item => {
           delete userInfo[item]
         })
 
         // 加入一个今日是否签到的属性
-        let signRecord = await SignRecordModel.findByUid(user._id)
+        const signRecord = await SignRecordModel.findByUid(user._id)
         if (signRecord !== null) {
           // debugger
           // 说明以前签到过了, 再看看签到
@@ -162,7 +162,7 @@ class LoginController {
         return
       }
       // 写入数据库
-      let pwd = await bcrypt.hash(body.password, 5)
+      const pwd = await bcrypt.hash(body.password, 5)
       const newUser = new UserModel({
         username: body.username,
         password: pwd,

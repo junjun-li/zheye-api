@@ -26,7 +26,9 @@ const unlessPath = [
   '/login',
   '/getTips',
   '/getTopWeek',
-  '/getLinks'
+  '/getLinks',
+  '/getPostDetail',
+  '/getComments'
 ]
 
 const JWT = jwt({ secret: config.jwtSecret }).unless({ path: unlessPath })

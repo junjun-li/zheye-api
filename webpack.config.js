@@ -1,7 +1,6 @@
 const path = require('path')
 const webpackNodeExternals = require('webpack-node-externals')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
-debugger
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpackConfig = {
   target: 'node',
   mode: 'development',
@@ -19,7 +18,7 @@ const webpackConfig = {
         test: /\.(js|jsx)$/,
         use: {
           loader: 'babel-loader'
-        },
+        }
         // exclude: [
         //   path.resolve(__dirname, 'node_modules')
         // ] // 把node_modules排除在外
@@ -37,7 +36,7 @@ const webpackConfig = {
     // process: true,
     // Buffer: true,
     __filename: true,
-    __dirname: true,
+    __dirname: true
     // setImmediate: true,
     // path: true
   }

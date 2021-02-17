@@ -15,7 +15,7 @@ const PostSchema = new Schema({
   content: { type: String },
   createdTime: { type: String },
   catalog: { type: String },
-  fav: { type: String },
+  integral: { type: String },
   // 是否结贴 0-未结束，1-已结贴
   isEnd: {
     type: String,
@@ -100,6 +100,14 @@ PostSchema.statics = {
         answer: -1 // 倒叙排序
       })
       .limit(15)
+  },
+  // 获取文章详情
+  findDetailById: function (id) {
+    return this.findOne({ _id: id })
+      .populate({
+        path: 'uid',
+        select: 'name isVip pic _id' // 筛选出来的字段
+      })
   }
 }
 

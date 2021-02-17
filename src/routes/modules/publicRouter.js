@@ -10,12 +10,12 @@ const router = new Router()
 router.get('/getCaptcha', PublicController.getCaptcha)
 
 // 获取友情链接
-router.get('/getLinks', ContentController.getLinks)
+router.get('/getLinks', PublicController.getLinks)
 
 // 获取温馨提醒
-router.get('/getTips', ContentController.getTips)
+router.get('/getTips', PublicController.getTips)
 
 // 获取本周热议
-router.get('/getTopWeek', ContentController.getTopWeek)
+router.get('/getTopWeek', PublicController.getTopWeek)
 
 export default router

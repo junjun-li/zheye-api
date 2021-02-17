@@ -10,6 +10,7 @@ import {
   getJWTPayload
 } from '@/common/utils'
 import UserModel from '@/model/UserModel'
+import CommentModel from '@/model/CommentModel'
 
 class ContentController {
   async getPostList (ctx) {
@@ -54,58 +55,6 @@ class ContentController {
       code: 0,
       data: result,
       msg: '获取文章列表成功'
-    }
-  }
-
-  // 友情链接
-  async getLinks (ctx) {
-    // title: { type: String },
-    // link: { type: String, default: 'link' },
-    // created: { type: Number },
-    // isTop: { type: String },
-    // sort: { type: String },
-    // type: '
-    // const linkTest = new LinkModel({
-    //   title: '慕课网',
-    //   link: 'www.imooc.com',
-    //   type: 'link',
-    //   isTop: '1',
-    //   sort: '0'
-    // })
-    // const tmp = await linkTest.save()
-    const result = await LinkModel.find({ type: 'link' })
-    ctx.body = {
-      code: 0,
-      data: result,
-      msg: '操作成功'
-    }
-  }
-
-  // 温馨通道
-  async getTips (ctx) {
-    // const linkTest = new LinkModel({
-    //   title: 'jenkins',
-    //   link: 'http://121.37.183.14:11005/',
-    //   type: 'tip',
-    //   isTop: '0',
-    //   sort: '0'
-    // })
-    // const tmp = await linkTest.save()
-    const result = await LinkModel.find({ type: 'tip' })
-    ctx.body = {
-      code: 0,
-      data: result,
-      msg: '操作成功'
-    }
-  }
-
-  // 获取本周热议
-  async getTopWeek (ctx) {
-    const res = await PostModel.getTopWeek()
-    ctx.body = {
-      code: 0,
-      data: res,
-      msg: '操作成功'
     }
   }
 
@@ -166,7 +115,7 @@ class ContentController {
   // 发帖
   async addPost (ctx) {
     const { body } = ctx.request
-    const { sid, code, fav } = body
+    const { sid, code, integral } = body
     // 验证图片验证码的时效性、正确性
     const result = await checkCode(sid, code)
     if (result) {
@@ -174,7 +123,7 @@ class ContentController {
       // 判断用户的积分数是否 > fav，否则，提示用户积分不足发贴
       // 用户积分足够的时候，新建Post，减除用户对应的积分
       const user = await UserModel.findByID({ _id: obj._id })
-      if (user.favs < fav) {
+      if (user.integral < integral) {
         ctx.body = {
           code: 1,
           msg: '积分不足'
@@ -184,7 +133,7 @@ class ContentController {
         await UserModel.updateOne(
           { _id: obj._id },
           // 扣除积分
-          { $inc: { favs: -body.fav } }
+          { $inc: { integral: -body.integral } }
         )
       }
       const newPost = await new PostModel(body)
@@ -201,6 +150,24 @@ class ContentController {
         code: 1,
         msg: '图片验证码验证失败'
       }
+    }
+  }
+
+  // 获取文章详情
+  async getPostDetail (ctx) {
+    const query = ctx.query
+    if (!query.id) {
+      ctx.body = {
+        code: 1,
+        msg: 'id cannot be empty'
+      }
+    }
+    const res = await PostModel.findDetailById(query.id)
+
+    ctx.body = {
+      code: 0,
+      data: res,
+      msg: '查询成功'
     }
   }
 }

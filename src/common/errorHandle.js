@@ -1,10 +1,9 @@
 export default (ctx, next) => {
   return next().catch((err) => {
-    console.log(err)
     if (err.status === 401) {
       ctx.status = 401
       ctx.body = {
-        code: 401,
+        code: 1,
         msg: 'token校验失败'
       }
     } else {

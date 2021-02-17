@@ -9,4 +9,6 @@ router.post('/uploadImg', ContentController.uploadImg)
 
 router.post('/add', ContentController.addPost)
 
+router.get('/getPostDetail', ContentController.getPostDetail)
+
 export default router
