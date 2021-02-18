@@ -5,22 +5,47 @@ import {
 } from '@/common/utils'
 import PostModel from '@/model/PostModel'
 import UserModel from '@/model/UserModel'
+import CommentsHandsModel from '@/model/CommentHandsModel'
 
 class CommentsController {
   // 获取评论列表
   async getComments (ctx) {
     const { id, page, pageSize } = ctx.query
-    const res = await CommentModel.findCommentsById({
+    let result = await CommentModel.findCommentsById({
       id,
       page,
       pageSize: parseInt(pageSize)
     })
+    // 判断用户是否登录，已登录的用户才去判断点赞信息
+    let obj = {}
+    if (typeof ctx.header.authorization !== 'undefined') {
+      obj = await getJWTPayload(ctx.header.authorization)
+    }
+    if (typeof obj._id !== 'undefined') {
+      result = result.map(item => item.toJSON())
+      for (let i = 0; i < result.length; i++) {
+        const item = result[i]
+        item.handed = '0'
+        const commentsHands = await CommentsHandsModel.findOne(
+          {
+            cid: item._id,
+            uid: obj._id
+          }
+        )
+        if (commentsHands && commentsHands.cid) {
+          if (commentsHands.uid === obj._id) {
+            item.handed = '1'
+          }
+        }
+      }
+    }
+
     const total = await CommentModel.queryCount(id)
     ctx.body = {
       code: 0,
       data: {
         total,
-        rows: res
+        rows: result
       },
       msg: '查询成功'
     }
@@ -52,10 +77,28 @@ class CommentsController {
     const newComment = new CommentModel(body)
     newComment.uid = obj._id
     const res = await newComment.save()
-    ctx.body = {
-      code: 0,
-      data: res,
-      msg: '操作成功'
+
+    // 评论数 +1
+    const post = await PostModel.updateOne(
+      { _id: body.tid },
+      {
+        $inc: {
+          answer: 1
+        }
+      }
+    )
+    if (post.ok === 1) {
+      ctx.body = {
+        code: 0,
+        data: res,
+        msg: '操作成功'
+      }
+    } else {
+      ctx.body = {
+        code: 1,
+        data: res,
+        msg: '操作失败'
+      }
     }
   }
 
@@ -111,6 +154,55 @@ class CommentsController {
       ctx.body = {
         code: 0,
         msg: '帖子已结贴，无法重复设置'
+      }
+    }
+  }
+
+  // 点赞
+  async setLink (ctx) {
+    const userInfo = await getJWTPayload(ctx.header.authorization)
+    const query = ctx.query
+    // 判断用户是否已经点赞
+    const tmp = await CommentsHandsModel.find(
+      {
+        cid: query.cid,
+        uid: userInfo._id
+      }
+    )
+    if (tmp.length > 0) {
+      ctx.body = {
+        code: 1,
+        msg: '您已经点赞，请勿重复点赞'
+      }
+      return
+    }
+    // 新增一条点赞记录
+    const newHands = new CommentsHandsModel({
+      cid: query.cid,
+      uid: userInfo._id
+    })
+    const data = await newHands.save()
+
+    // 更新comments表中对应的记录的hands信息 +1
+    const result = await CommentModel.updateOne(
+      { _id: query.cid },
+      {
+        $inc: {
+          hands: 1
+        }
+      }
+    )
+    if (result.ok === 1) {
+      ctx.body = {
+        code: 0,
+        msg: '点赞成功',
+        data: data
+      }
+    }
+    else {
+      ctx.body = {
+        code: 1,
+        msg: '保存点赞记录失败！'
       }
     }
   }

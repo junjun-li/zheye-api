@@ -162,11 +162,19 @@ class ContentController {
         msg: 'id cannot be empty'
       }
     }
-    const res = await PostModel.findDetailById(query.id)
-
+    const post = await PostModel.findDetailById(query.id)
+    // 更新文章阅读计数
+    const res = await PostModel.updateOne(
+      { _id: query.id },
+      {
+        $inc: {
+          reads: 1
+        }
+      }
+    )
     ctx.body = {
       code: 0,
-      data: res,
+      data: post,
       msg: '查询成功'
     }
   }

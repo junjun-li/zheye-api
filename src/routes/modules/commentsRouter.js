@@ -9,4 +9,6 @@ router.post('/addComment', CommentsController.addComment)
 
 router.get('/setCommentBest', CommentsController.setCommentBest)
 
+router.get('/setLink', CommentsController.setLink)
+
 export default router
